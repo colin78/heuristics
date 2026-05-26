@@ -1,7 +1,15 @@
-install:
+VENV := .venv
+PYTHON := $(VENV)/bin/python
+PIP := $(PYTHON) -m pip
+
+.PHONY: install language-install global-install test format refactor lint all
+
+$(PYTHON):
+	python3 -m venv $(VENV)
+
+install: $(PYTHON)
 	##non-gpu version
-	#pip install --upgrade pip &&\
-	#	pip install -r requirements.txt
+	$(PIP) install --upgrade pip && $(PIP) install -r requirements.txt
 	####optimizing for conda in GPU environment
 	#conda env create -f environment.yml
 	#conda activate heuristics
@@ -12,17 +20,17 @@ language-install:
 
 global-install: install language-install
 
-test:
+test: $(PYTHON)
 	#ignores the virus of pandas warnings
-	python -m pytest -vv -p no:warnings test_*.py tests/
+	$(PYTHON) -m pytest -vv -p no:warnings test_*.py tests/
 
-format:	
-	black .
+format: $(PYTHON)
+	$(PYTHON) -m black .
 
 refactor: format lint
 
-lint:
+lint: $(PYTHON)
 	find . -type f -name "*.py" \
-	 | xargs pylint --disable=R,C --ignore-patterns=test_.*?py 
+	 | xargs $(PYTHON) -m pylint --disable=R,C --ignore-patterns=test_.*?py 
 
 all: install lint test

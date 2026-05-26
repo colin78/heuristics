@@ -125,7 +125,7 @@ def simulate_investor(
         amount_invested = random.randint(low_range_investments, high_range_investments)
         accumulated_investments += amount_invested
         # print accumulated_investment in millions
-        print(f"Cumulative INVESTMENT: {accumulated_investments/1000000:.2f} million")   
+        print(f"Cumulative INVESTMENT: {accumulated_investments/1000000:.2f} million")
         print(f"Cumulative PAYOUT: {total/1000000:.2f} million")
         print(f"Percentage owned: {percentage_owned}")
         if scenarios[0]:
@@ -176,15 +176,15 @@ def sanity(num):
 
 @cli.command("vcportfolio")
 @click.option(
-    "--startup_valuation", default="10000000, 10000000000", help="Value of startup range"
+    "--startup_valuation",
+    default="10000000, 10000000000",
+    help="Value of startup range",
 )
 @click.option(
     "--simulations", default=100, help="Number of startups worked for in a row"
 )
 @click.option("--probability", default=0.023, help="Probability of startup success")
-@click.option(
-    "--investments", default="10000, 10000000", help="Amount invested range"
-)
+@click.option("--investments", default="10000, 10000000", help="Amount invested range")
 def vcportfolio(startup_valuation, simulations, probability, investments):
     """Simulate a venture capitalist investing in a porfolio of companies
 
@@ -208,15 +208,36 @@ def vcportfolio(startup_valuation, simulations, probability, investments):
         probability=probability,
     )
     try:
-        click.echo(click.style(f"Amount Invested: ${roi['amount_invested']/1000000:.2f}M", fg="green"))
-        click.echo(click.style(f"Amount Returned: ${roi['amount_returned']/1000000:.2f}M", fg="green"))
-        click.echo(click.style(f"Return on Investment: ${roi['return_on_investment']/1000000:.2f}M", fg="green"))
-        click.echo(click.style(f"Percentage Return on Investment: {roi['percentage_return_on_investment']:.2f}%", fg="green"))
+        click.echo(
+            click.style(
+                f"Amount Invested: ${roi['amount_invested']/1000000:.2f}M", fg="green"
+            )
+        )
+        click.echo(
+            click.style(
+                f"Amount Returned: ${roi['amount_returned']/1000000:.2f}M", fg="green"
+            )
+        )
+        click.echo(
+            click.style(
+                f"Return on Investment: ${roi['return_on_investment']/1000000:.2f}M",
+                fg="green",
+            )
+        )
+        click.echo(
+            click.style(
+                f"Percentage Return on Investment: {roi['percentage_return_on_investment']:.2f}%",
+                fg="green",
+            )
+        )
     except TypeError:
         click.echo(click.style(f"Amount Invested: ${roi/1000000:.2f}M", fg="green"))
         click.echo(click.style(f"Amount Returned: ${roi/1000000:.2f}M", fg="green"))
-        click.echo(click.style(f"Return on Investment: ${roi/1000000:.2f}M", fg="green"))
+        click.echo(
+            click.style(f"Return on Investment: ${roi/1000000:.2f}M", fg="green")
+        )
         click.echo(click.style(f"Percentage Return on Investment: 0%", fg="green"))
+
 
 @cli.command("simulate")
 @click.option("--startup_valuation", default=100000000, help="Value of startup")

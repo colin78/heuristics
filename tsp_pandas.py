@@ -1,7 +1,8 @@
 import numpy as np
 import random
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 import pandas as pd
 
 

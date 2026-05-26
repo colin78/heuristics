@@ -11,6 +11,7 @@ from timeit import default_timer as timer
 # The computation will be done on blocks of TPBxTPB elements.
 TPB = 16
 
+
 @cuda.jit
 def fast_matmul(A, B, C):
     # Define an array in the shared memory
@@ -22,7 +23,7 @@ def fast_matmul(A, B, C):
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
-    bpg = cuda.gridDim.x    # blocks per grid
+    bpg = cuda.gridDim.x  # blocks per grid
 
     if x >= C.shape[0] and y >= C.shape[1]:
         # Quit if (x, y) is outside of valid C boundary
@@ -30,7 +31,7 @@ def fast_matmul(A, B, C):
 
     # Each thread computes one element in the result matrix.
     # The dot product is chunked into dot products of TPB-long vectors.
-    tmp = 0.
+    tmp = 0.0
     for i in range(bpg):
         # Preload data into shared memory
         sA[tx, ty] = A[x, ty + i * TPB]
@@ -48,12 +49,13 @@ def fast_matmul(A, B, C):
 
     C[x, y] = tmp
 
+
 # run it
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Initialize the data arrays
-    A = np.full((TPB*20, TPB*20), 3, np.float32)
-    B = np.full((TPB*20, TPB*20), 4, np.float32)
+    A = np.full((TPB * 20, TPB * 20), 3, np.float32)
+    B = np.full((TPB * 20, TPB * 20), 4, np.float32)
 
     # Configure the blocks
     threadsperblock = (TPB, TPB)
@@ -61,7 +63,7 @@ if __name__ == '__main__':
     blockspergrid_y = int(np.ceil(B.shape[1] / threadsperblock[1]))
     blockspergrid = (blockspergrid_x, blockspergrid_y)
 
-    # Start the kernel 
+    # Start the kernel
     C = np.zeros_like(A)
     start = timer()
     fast_matmul[blockspergrid, threadsperblock](A, B, C)
